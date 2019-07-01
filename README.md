@@ -1,125 +1,202 @@
-# Behavioral Cloning Project
+# **Behavioral Cloning** 
 
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+TODO: Complete writeup
 
-Overview
----
-This repository contains starting files for the Behavioral Cloning Project.
+**Behavioral Cloning Project**
 
-In this project, you will use what you've learned about deep neural networks and convolutional neural networks to clone driving behavior. You will train, validate and test a model using Keras. The model will output a steering angle to an autonomous vehicle.
-
-We have provided a simulator where you can steer a car around a track for data collection. You'll use image data and steering angles to train a neural network and then use this model to drive the car autonomously around the track.
-
-We also want you to create a detailed writeup of the project. Check out the [writeup template](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup. The writeup can be either a markdown file or a pdf document.
-
-To meet specifications, the project will require submitting five files: 
-* model.py (script used to create and train the model)
-* drive.py (script to drive the car - feel free to modify this file)
-* model.h5 (a trained Keras model)
-* a report writeup file (either markdown or pdf)
-* video.mp4 (a video recording of your vehicle driving autonomously around the track for at least one full lap)
-
-This README file describes how to output the video in the "Details About Files In This Directory" section.
-
-Creating a Great Writeup
----
-A great writeup should include the [rubric points](https://review.udacity.com/#!/rubrics/432/view) as well as your description of how you addressed each point.  You should include a detailed description of the code used (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
-
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
-
-The Project
----
 The goals / steps of this project are the following:
-* Use the simulator to collect data of good driving behavior 
-* Design, train and validate a model that predicts a steering angle from image data
-* Use the model to drive the vehicle autonomously around the first track in the simulator. The vehicle should remain on the road for an entire loop around the track.
+* Use the simulator to collect data of good driving behavior
+* Build, a convolution neural network in Keras that predicts steering angles from images
+* Train and validate the model with a training and validation set
+* Test that the model successfully drives around track one without leaving the road
 * Summarize the results with a written report
 
-### Dependencies
-This lab requires:
 
-* [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
+## Rubric Points
+### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
-The lab enviroment can be created with CarND Term1 Starter Kit. Click [here](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) for the details.
+[model.py]: ./model.py
+[drive.py]: ./drive.py
+[model.h5]: ./model.h5
 
-The following resources can be found in this github repository:
-* drive.py
-* video.py
-* writeup_template.md
+---
+### Foreword
 
-The simulator can be downloaded from the classroom. In the classroom, we have also provided sample data that you can optionally use to help train your model.
+I used pipenv for training the model and executing the simulator on my local machine.
 
-## Details About Files In This Directory
+I imitated environment.yml in [CarND-Term1-Starter-Kit](https://github.com/udacity/CarND-Term1-Starter-Kit) provided by Udacity, so I think the environmental difference between my local machine and Udacity workspace is small.
 
-### `drive.py`
+### Files Submitted & Code Quality
 
-Usage of `drive.py` requires you have saved the trained model as an h5 file, i.e. `model.h5`. See the [Keras documentation](https://keras.io/getting-started/faq/#how-can-i-save-a-keras-model) for how to create this file using the following command:
-```sh
-model.save(filepath)
-```
+#### 1. Submission includes all required files and can be used to run the simulator in autonomous mode
 
-Once the model has been saved, it can be used with drive.py using this command:
+My project includes the following files:
+* README.md summarizing the results (you're reading it)
+* [preprocess.py](preprocess.py) for preprocessing image data used by both model training and autonomous driving
+* [model.py](model.py) containing the script to create and train the model
+* [drive.py](drive.py) for driving the car in autonomous mode
+* [model.h5](model.h5) containing a trained convolution neural network 
+* [video.mp4](video.mp4) containing a driving video in autonomous mode
 
+#### 2. Submission includes functional code
+Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
 ```sh
 python drive.py model.h5
 ```
 
-The above command will load the trained model and use the model to make predictions on individual images in real-time and send the predicted angle back to the server via a websocket connection.
+#### 3. Submission code is usable and readable
 
-Note: There is known local system's setting issue with replacing "," with "." when using drive.py. When this happens it can make predicted steering values clipped to max/min values. If this occurs, a known fix for this is to add "export LANG=en_US.utf8" to the bashrc file.
+The [model.py](model.py) file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
-#### Saving a video of the autonomous agent
 
-```sh
-python drive.py model.h5 run1
-```
+### Model Architecture and Training Strategy
 
-The fourth argument, `run1`, is the directory in which to save the images seen by the agent. If the directory already exists, it'll be overwritten.
+#### 1. An appropriate model architecture has been employed
 
-```sh
-ls run1
+The model definition is located in [model.py](model.py) lines 124-165.
+The model consists of a convolutional neural network.
 
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_424.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_451.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_477.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_528.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_573.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_618.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_697.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_723.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_749.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_817.jpg
-...
-```
+The convolutional layers are 3x3 filter sizes and their depths are between 32 and 512 ([model.py](model.py) lines 131-146), and max pooling layers are used.
+After that, there are fully connected layers which output sizes are between 1024 and 64.
+The model uses RELU layers for activation to introduce nonlinearity.
 
-The image file name is a timestamp of when the image was seen. This information is used by `video.py` to create a chronological video of the agent driving.
+The image data is preprocessed by the function `preprocess()` ([preprocess.py](preprocess.py)) before input into the network.
+Preprocessing consists of cropping, resizing, standardization.
+Thus, I inserted preprocess code into [drive.py](drive.py) line 66.
 
-### `video.py`
 
-```sh
-python video.py run1
-```
+#### 2. Attempts to reduce overfitting in the model
 
-Creates a video based on images found in the `run1` directory. The name of the video will be the name of the directory followed by `'.mp4'`, so, in this case the video will be `run1.mp4`.
+The model contains batch normalization layers in order to reduce overfitting ([model.py](model.py) lines 133, 137, 153).
+Batch normalization layers are inserted after each convolutional layer and fully connected layer.
+The paramaters for batch normalization are used the default ones.
 
-Optionally, one can specify the FPS (frames per second) of the video:
+The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 57).
+The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
-```sh
-python video.py run1 --fps 48
-```
 
-Will run the video at 48 FPS. The default FPS is 60.
+#### 3. Model parameter tuning
 
-#### Why create a video
+The model used an adam optimizer, so the learning rate was not tuned manually ([model.py](model.py) line 163).
 
-1. It's been noted the simulator might perform differently based on the hardware. So if your model drives succesfully on your machine it might not on another machine (your reviewer). Saving a video is a solid backup in case this happens.
-2. You could slightly alter the code in `drive.py` and/or `video.py` to create a video of what your model sees after the image is processed (may be helpful for debugging).
 
-### Tips
-- Please keep in mind that training images are loaded in BGR colorspace using cv2 while drive.py load images in RGB to predict the steering angles.
+#### 4. Appropriate training data
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+Training data was chosen to keep the vehicle driving on the road.
+I used a center driving data created by myself and project provided dataset.
 
+
+### Architecture and Training Documentation
+
+#### 1. Solution Design Approach
+
+My first step was to use a convolution neural network model based on several convolution layers and max pooling.
+It was a basic model I used many time for solving the comupter vision tasks, so I chose it for a starting point.
+
+In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set.
+To combat the overfitting, I used batch normalization layer implemented in keras.
+Batch normalization and dropout techniques cannot be used together, so I used only batch normalization.
+
+However, I realized it was too complicated for me to accomplish all preprocessing tasks I wanted on keras lambda layers.
+Also, I suffered from out of memory error of GPU and failed to make network deep enough.
+Thus, I decided to use the plain function to apply preprocessing to images, which would offload preprocessing from GPU and reduce GPU memory usage.
+This enabled the network to deeper and made my code simple and clean.
+
+The final step was to run the simulator to see how well the car was driving around track one.
+The vehicle is able to drive autonomously around the track without leaving the road.
+
+<!-- #region -->
+#### 2. Final Model Architecture
+
+The final model architecture ([model.py](model.py) lines 128-169) consisted of a convolution neural network with the following layers and layer sizes.
+
+
+| Layer               | Output Size | Description                                    |
+| :------------------ | :---------- | :--------------------------------------------- |
+| Input               | 40x160x3    |                                                |
+| Convolution         | 40x160x32   | (3x3x32) filter / (1x1) stride / SAME padding  |
+| Batch Normalization | 40x160x32   | default parameters                             |
+| ReLU                | 40x160x32   |                                                |
+| Convolution         | 40x160x32   | (3x3x32) filter / (1x1) stride / SAME padding  |
+| Batch Normalization | 40x160x32   | default parameters                             |
+| ReLU                | 40x160x32   |                                                |
+| Max Pooling         | 20x80x32    | (2x2) kernel / (2x2) stride / VALID padding    |
+| Convolution         | 20x80x64    | (3x3x64) filter / (1x1) stride / SAME padding  |
+| Batch Normalization | 20x80x64    | default parameters                             |
+| ReLU                | 20x80x64    |                                                |
+| Convolution         | 20x80x64    | (3x3x64) filter / (1x1) stride / SAME padding  |
+| Batch Normalization | 20x80x64    | default parameters                             |
+| ReLU                | 20x80x64    |                                                |
+| Max Pooling         | 10x40x64    | (2x2) kernel / (2x2) stride / VALID padding    |
+| Convolution         | 10x40x128   | (3x3x128) filter / (1x1) stride / SAME padding |
+| Batch Normalization | 10x40x128   | default parameters                             |
+| ReLU                | 10x40x128   |                                                |
+| Convolution         | 10x40x128   | (3x3x128) filter / (1x1) stride / SAME padding |
+| Batch Normalization | 10x40x128   | default parameters                             |
+| ReLU                | 10x40x128   |                                                |
+| Max Pooling         | 5x20x128    | (2x2) kernel / (2x2) stride / VALID padding    |
+| Convolution         | 5x20x256    | (3x3x256) filter / (1x1) stride / SAME padding |
+| Batch Normalization | 5x20x256    | default parameters                             |
+| ReLU                | 5x20x256    |                                                |
+| Convolution         | 5x20x256    | (3x3x256) filter / (1x1) stride / SAME padding |
+| Batch Normalization | 5x20x256    | default parameters                             |
+| ReLU                | 5x20x256    |                                                |
+| Max Pooling         | 2x10x256    | (2x2) kernel / (2x2) stride / VALID padding    |
+| Convolution         | 2x10x512    | (3x3x512) filter / (1x1) stride / SAME padding |
+| Batch Normalization | 2x10x512    | default parameters                             |
+| ReLU                | 2x10x512    |                                                |
+| Convolution         | 2x10x512    | (3x3x512) filter / (1x1) stride / SAME padding |
+| Batch Normalization | 2x10x512    | default parameters                             |
+| ReLU                | 2x10x512    |                                                |
+| Max Pooling         | 1x5x512     | (2x2) kernel / (2x2) stride / VALID padding    |
+| Flatten             | 2560        |                                                |
+| Fully Connected     | 1024        |                                                |
+| Batch Normalization | 1024        | default parameters                             |
+| ReLU                | 1024        |                                                |
+| Fully Connected     | 256         |                                                |
+| Batch Normalization | 256         | default parameters                             |
+| ReLU                | 256         |                                                |
+| Fully Connected     | 64          |                                                |
+| Batch Normalization | 64          | default parameters                             |
+| ReLU                | 64          |                                                |
+| Fully Connected     | 1           |                                                |
+<!-- #endregion -->
+
+<!-- #region -->
+#### 3. Creation of the Training Set & Training Process
+
+To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+
+![Center driving](assets/center.jpg)
+
+To augment the data set, I flipped images and angles.
+This would generalizing dataset because the road of track one is counter-clockwise, which might contain biases.
+For example, here is an image that has then been flipped (left is raw, right is flipped):
+
+![Raw image](assets/non_flipped.jpg)
+![Flipped image](assets/flipped.jpg)
+
+Using the collected data and the project provided data, I had 21078 number of data points.
+I then preprocessed this data by calling `preprocess()` ([preprocess.py](preprocess.py)).
+
+Preprocessing consists of three steps:
+
+* Raw image: ![Raw image](assets/non_preprocessed.jpg)
+
+
+1. cropping: cut top and bottom parts
+   ![Cropped image](assets/cropped.jpg)
+
+2. resizing: shrink to 0.5x size
+   ![Resized image](assets/resized.jpg)
+
+3. standardization: standardize values to [-1.0,1.0] range
+<!-- #endregion -->
+
+I finally randomly shuffled the data set and put 10% of the data into a validation set. 
+
+I used this training data for training the model.
+The validation set helped determine if the model was over or under fitting.
+I set the number of epoch to 20 and used EarlyStopping callback to achieve early stopping in keras, resulted in stopping at epoch 8.
+
+I used an adam optimizer so that manually training the learning rate wasn't necessary.
